@@ -32,7 +32,8 @@ sub get_flash {
 
 before_template sub {
     my $tokens = shift;
-    
+
+    $tokens->{'home_url'}   = uri_for '/';    
     $tokens->{'css_url'}    = request->base . 'css/style.css';
     $tokens->{'login_url'}  = uri_for '/login';
     $tokens->{'logout_url'} = uri_for '/logout';
@@ -60,6 +61,18 @@ post '/add' => sub {
 
     set_flash('New entry posted!');
     redirect '/';
+};
+
+get '/view/:post_id' => sub {
+    
+    my $dbh = connect_db;
+    my $sql = 'SELECT id, title, text FROM ENTRIES WHERE id = ?';
+    my $sth = $dbh->prepare($sql) or die $dbh->errstr;
+    $sth->execute( params->{'post_id'} ) or die $sth->errstr;
+
+    template 'view_entry.tt' => {
+        'entry'   => $sth->fetchall_hashref('id')
+    };
 };
 
 any ['get', 'post'] => '/login' => sub {

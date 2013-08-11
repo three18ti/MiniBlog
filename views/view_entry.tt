@@ -1,0 +1,10 @@
+<ul class=entries>
+<% IF entry.size %>
+    <% FOREACH id IN entry.keys %>
+        <li><h2><% entry.$id.title %></a></h2><% entry.$id.text %></li>
+    <% END %>
+<% ELSE %>
+  <li><em>Entry Not Found</em></li>
+  <li>Return <a href="<% home_url %>">Home</a></li>
+<% END %>
+</ul>
