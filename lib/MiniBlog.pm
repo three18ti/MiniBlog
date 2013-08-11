@@ -59,7 +59,7 @@ post '/add' => sub {
     my $sth = $dbh->prepare($sql) or die $dbh->errstr;
     $sth->execute( params->{'title'}, params->{text} ) or die $sth->errstr;
 
-    set_flash('New entry posted!');
+    set_flash 'New entry posted!';
     redirect '/';
 };
 
@@ -71,8 +71,22 @@ get '/view/:post_id' => sub {
     $sth->execute( params->{'post_id'} ) or die $sth->errstr;
 
     template 'view_entry.tt' => {
-        'entry'   => $sth->fetchall_hashref('id')
+        'entry'         => $sth->fetchall_hashref('id'),
+        'delete_url'    => uri_for '/delete/',
     };
+};
+
+get '/delete/:post_id' => sub {
+    send_error "Not Logged in", 401 unless session('logged_in');
+
+    my $dbh = connect_db;
+    my $sql = 'DELETE FROM entries WHERE id = ?';
+    my $sth = $dbh->prepare($sql) or die $dbh->errstr;
+
+    $sth->execute ( params->{'post_id'} ) or die $sth->errstr;
+
+    set_flash 'Entry #' . params->{'post_id'} . ' Deleted';
+    redirect '/';
 };
 
 any ['get', 'post'] => '/login' => sub {

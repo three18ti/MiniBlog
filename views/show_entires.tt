@@ -1,3 +1,12 @@
+<ul class=entries>
+<% IF entries.size %>
+  <% FOREACH id IN entries.keys.nsort %>
+    <li><h2><a href="<% request.uri_base %>/view/<% entries.$id.id %>" ><% entries.$id.title %></a></h2><% entries.$id.text %>
+  <% END %>
+<% ELSE %>
+  <li><em>Unbelievable.  No entries here so far</em>
+<% END %>
+</ul>
 <% IF session.logged_in %>
   <form action="<% add_entry_url %>" method=post class=add-entry>
     <dl>
@@ -9,12 +18,3 @@
     </dl>
   </form>
 <% END %>
-<ul class=entries>
-<% IF entries.size %>
-  <% FOREACH id IN entries.keys.nsort %>
-    <li><h2><a href="<% request.uri_base %>/view/<% entries.$id.id %>" ><% entries.$id.title %></a></h2><% entries.$id.text %>
-  <% END %>
-<% ELSE %>
-  <li><em>Unbelievable.  No entries here so far</em>
-<% END %>
-</ul>

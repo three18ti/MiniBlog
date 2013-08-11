@@ -2,6 +2,9 @@
 <% IF entry.size %>
     <% FOREACH id IN entry.keys %>
         <li><h2><% entry.$id.title %></a></h2><% entry.$id.text %></li>
+        <% IF session.logged_in %>
+            <a href="<% delete_url %><% entry.$id.id %>">Delete Entry</a>
+        <% END %>
     <% END %>
 <% ELSE %>
   <li><em>Entry Not Found</em></li>
